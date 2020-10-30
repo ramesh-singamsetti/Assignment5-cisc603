@@ -17,15 +17,15 @@ q.append((dfa_start,))
 nfa = {}
 dfa = {}
 
-for transition in data["t_func"]:
-    nfa[(transition[0], transition[1])] = transition[2]
+for trans in data["t_func"]:
+    nfa[(trans[0], trans[1])] = trans[2]
 
 for instate in q:
     for symbol in dfa_letters:
-        if len(instate) == 1 and (instate[0], symbol) in nfa:
+        if (instate[0], symbol) and len(instate) == 1 in nfa:
             dfa[(instate, symbol)] = nfa[(instate[0], symbol)]
 
-            if tuple(dfa[(instate, symbol)]) not in q:
+            if tuple(dfa[(instate, symbol)]) != q:
                 q.append(tuple(dfa[(instate, symbol)]))
         else:
             dest = []
@@ -55,11 +55,15 @@ for q_state in q:
             dfa_final.append(q_state)
 
 dfa = OrderedDict()
-dfa["states"] = dfa_states
-dfa["letters "] = dfa_letters
-dfa["t_func"] = dfa_func
+dfa["state"] = dfa_states
+dfa["letters"] = dfa_letters
+dfa["function"] = dfa_func
 dfa["start"] = dfa_start
 dfa["final"] = dfa_final
 
-with open('output1.json', 'w') as output_file1:
-    json.dump(dfa, output_file1, separators=('\t', ':'))
+
+with open('output.json', 'w') as output:
+    for key, value in dfa.items():
+        json.dump((key,value), output, separators=('\t', ':'))
+        output.write('\n')
+
